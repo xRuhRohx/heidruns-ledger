@@ -1,0 +1,38 @@
+<div class="feeding-form">
+    <div class="header">
+      <h1>Add Feeding #{{ nextFeedingNumber() }}</h1>
+      <a [routerLink]="['/batches', batchId()]">Back</a>
+    </div>
+
+    <form (ngSubmit)="save()">
+      <div class="field">
+        <label>Date</label>
+        <input type="date" [(ngModel)]="feeding.date" name="date" required />
+      </div>
+
+      <div class="field">
+        <label>Pre-Feed Gravity</label>
+        <input type="number" [(ngModel)]="feeding.preGravity" name="preGravity" step="0.0001" required />
+      </div>
+
+      <div class="field">
+        <label>Post-Feed Gravity</label>
+        <input type="number" [(ngModel)]="feeding.postGravity" name="postGravity" step="0.0001" required />
+      </div>
+
+      <div class="field">
+        <label>Ingredients Added</label>
+        <input type="text" [(ngModel)]="feeding.ingredients" name="ingredients" placeholder="e.g. 2lbs wildflower honey"
+   />
+      </div>
+
+      <div class="field">
+        <label>Notes</label>
+        <textarea [(ngModel)]="feeding.notes" name="notes" rows="3"></textarea>
+      </div>
+
+      <button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Saving...' : 'Save Feeding' }}
+      </button>
+    </form>
+  </div>

@@ -1,0 +1,52 @@
+<div class="dashboard">
+    <div class="stats">
+      <div class="stat-card">
+        <span class="stat-value">{{ activeBatches().length }}</span>
+        <span class="stat-label">Active Batches</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">{{ nearTargetGravity() }}</span>
+        <span class="stat-label">Near 1.028 Gravity</span>
+      </div>
+      <div class="stat-card" [class.warning]="upcomingAlerts() > 0">
+        <span class="stat-value">{{ upcomingAlerts() }}</span>
+        <span class="stat-label">Alerts This Week</span>
+      </div>
+      <div class="stat-card" [class.danger]="overdueAlerts() > 0">
+        <span class="stat-value">{{ overdueAlerts() }}</span>
+        <span class="stat-label">Overdue Alerts</span>
+      </div>
+    </div>
+
+    <div class="batch-list">
+      <div class="section-header">
+        <h2>Active Batches</h2>
+        <a routerLink="/batches/new">New Batch</a>
+      </div>
+
+      @if (activeBatches().length === 0) {
+        <p class="empty">No active batches. Start one!</p>
+      }
+
+      @for (batch of activeBatches(); track batch.id) {
+        <a class="batch-card" [routerLink]="['/batches', batch.id]">
+          <div class="batch-thumb">
+            @if (batch.imageUrl) {
+              <img [src]="batch.imageUrl" alt="{{ batch.name }}" />
+            } @else {
+              <span>🍯</span>
+            }
+          </div>
+          <div class="batch-info">
+            <div class="batch-name">{{ batch.name }}</div>
+          </div>
+          <div class="batch-meta">
+              <span class="status {{ batch.status }}">{{ batch.status }}</span>
+              @if (batch.currentGravity) {
+                <span>{{ batch.currentGravity }}</span>
+              }
+            </div>
+        </a>
+      }
+    </div>
+  </div>

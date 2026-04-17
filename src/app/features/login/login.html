@@ -1,0 +1,14 @@
+<div class="login-container">
+    <div class="login-card">
+        <h1>Heidrun's Ledger</h1>
+        <p>Track your mead from grain to glass</p>
+
+        @if (authService.accessDenied()) {
+            <p class="error">Access denied. This ledger is private!</p>
+        }
+
+        <button (click)="authService.signInWithGoogle()">
+            Sign in with Google
+        </button>
+    </div>
+</div>

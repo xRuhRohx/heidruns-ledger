@@ -1,0 +1,52 @@
+<div class="ingredient-form">
+    <div class="header">
+      <h1>Add Ingredient</h1>
+      <a [routerLink]="['/batches', batchId()]">Back</a>
+    </div>
+
+    <form (ngSubmit)="save()">
+      <div class="field">
+        <label>Name</label>
+        <input type="text" [(ngModel)]="ingredient.name" name="name"
+               placeholder="e.g. Wildflower Honey" required />
+      </div>
+
+      <div class="field">
+        <label>Type</label>
+        <select [(ngModel)]="ingredient.type" name="type">
+          <option value="honey">Honey</option>
+          <option value="fruit">Fruit</option>
+          <option value="spice">Spice</option>
+          <option value="nutrient">Nutrient</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Amount</label>
+        <input type="number" [(ngModel)]="ingredient.amount" name="amount" step="0.01" required />
+      </div>
+
+      <div class="field">
+        <label>Unit</label>
+        <select [(ngModel)]="ingredient.unit" name="unit">
+          <option value="lbs">lbs</option>
+          <option value="oz">oz</option>
+          <option value="g">g</option>
+          <option value="kg">kg</option>
+          <option value="gallons">gallons</option>
+          <option value="ml">ml</option>
+          <option value="L">L</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Notes</label>
+        <textarea [(ngModel)]="ingredient.notes" name="notes" rows="3"></textarea>
+      </div>
+
+      <button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Saving...' : 'Save Ingredient' }}
+      </button>
+    </form>
+  </div>

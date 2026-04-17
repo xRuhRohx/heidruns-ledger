@@ -1,0 +1,10 @@
+@if (auth.isLoggedIn()) {
+    <nav>
+        <span class="brand">Heidrun's Ledger</span>
+        <div class="links">
+            <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+            <a routerLink="/batches" routerLinkActive="active">Batches</a>
+        </div>
+        <button (click)="auth.signOut()">Logout</button>
+    </nav>
+}

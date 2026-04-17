@@ -1,1 +1,61 @@
-/* You can add global styles to this file, and also import other style files */
+*, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  // html, body {
+  //   margin: 0;
+  //   padding: 0;
+  //   overflow-x: hidden;
+  //   font-family: sans-serif;
+  //   color: #2C1810;
+  //   background-color: #FAF5EB;
+  //   background-image: url('./assets/texture.png');
+  //   background-repeat: repeat;
+  //   background-size: 300px 300px;
+  // }
+
+  html {
+    position: relative;
+  }
+
+  html::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url('./assets/texture.png');
+    background-repeat: repeat;
+    background-size: 300px 300px;
+    opacity: 0.4;
+    z-index: -1;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: sans-serif;
+    color: #2C1810;
+    // background-color: #FAF5EB;
+  }
+
+  :root {
+    --color-bg: #FAF5EB;
+    --color-surface: #FFF8EE;
+    --color-border: #DEC99A;
+    --color-border-light: #EEE0C0;
+
+    --color-primary: #4A2C0A;
+    --color-primary-hover: #6B4420;
+    --color-accent: #C8860A;
+
+    --color-text: #2C1810;
+    --color-text-muted: #7A5C3A;
+    --color-text-secondary: #5A3E28;
+
+    --color-status-primary: #3D6B30;
+    --color-status-secondary: #5C6830;
+    --color-status-conditioning: #8B6A00;
+
+    --color-warning: #8B6A00;
+    --color-danger: #7A2525;
+  }

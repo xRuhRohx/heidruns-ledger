@@ -1,0 +1,32 @@
+<div class="gravity-form">
+    <div class="header">
+      <h1>Log Gravity Reading</h1>
+      <a [routerLink]="['/batches', batchId()]">Back</a>
+    </div>
+
+    <form (ngSubmit)="save()">
+      <div class="field">
+        <label>Date</label>
+        <input type="date" [(ngModel)]="reading.date" name="date" required />
+      </div>
+
+      <div class="field">
+        <label>Gravity Reading</label>
+        <input type="number" [(ngModel)]="reading.reading" name="reading" step="0.0001" required />
+      </div>
+
+      <div class="field">
+        <label>Feeding # (0 if before any feeding)</label>
+        <input type="number" [(ngModel)]="reading.feedingNumber" name="feedingNumber" />
+      </div>
+
+      <div class="field">
+        <label>Notes</label>
+        <textarea [(ngModel)]="reading.notes" name="notes" rows="3"></textarea>
+      </div>
+
+      <button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Saving...' : 'Save Reading' }}
+      </button>
+    </form>
+  </div>

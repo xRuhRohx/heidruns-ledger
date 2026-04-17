@@ -1,0 +1,41 @@
+<div class="batch-list">
+    <div class="header">
+      <h1>My Batches</h1>
+      <a routerLink="/batches/new">New Batch</a>
+    </div>
+
+    @if (batches().length === 0) {
+      <p class="empty">No batches yet. Start your first one!</p>
+    }
+
+    @for (group of statusGroups; track group.status) {
+      @let groupBatches = batchesByStatus(group.status);
+      @if (groupBatches.length > 0) {
+        <section>
+          <h2 class="group-label">{{ group.label }}</h2>
+          <div class="cards">
+            @for (batch of groupBatches; track batch.id) {
+              <a class="batch-card" [routerLink]="['/batches', batch.id]">
+                <div class="batch-image">
+                  @if (batch.imageUrl) {
+                    <img [src]="batch.imageUrl" [alt]="batch.name" />
+                  } @else {
+                    <span>🍯</span>
+                  }
+                </div>
+                <div class="batch-info">
+                  <h3>{{ batch.name }}</h3>
+                  <div class="batch-stats">
+                    <span>OG: {{ batch.originalGravity }}</span>
+                    <span>CG: {{ batch.currentGravity }}</span>
+                    <span class="abv">ABV: ~{{ quickAbv(batch) }}%</span>
+                  </div>
+                  <div class="batch-date">Started: {{ batch.startDate | date: 'mediumDate' }}</div>
+                </div>
+              </a>
+            }
+          </div>
+        </section>
+      }
+    }
+  </div>

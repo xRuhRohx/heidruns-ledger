@@ -1,0 +1,28 @@
+@use '../../../../styles/forms' as *;
+
+.batch-form {
+    max-width: 520px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+    .image-picker {
+    width: 100%;
+    height: 180px;
+    border: 2px dashed var(--color-border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    background: var(--color-surface);
+
+    &:hover { border-color: var(--color-primary); }
+
+    img { width: 100%; height: 100%; object-fit: cover; }
+    span { color: var(--color-text-muted); font-size: 0.95rem; }
+  }
+}

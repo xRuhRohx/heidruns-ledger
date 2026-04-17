@@ -1,0 +1,19 @@
+<div class="alert-form">
+    <div class="header">
+      <h1>Add Alert</h1>
+      <a [routerLink]="['/batches', batchId()]">Back</a>
+    </div>
+    <form (ngSubmit)="save()">
+      <div class="field">
+        <label>Title</label>
+        <input [(ngModel)]="alert.title" name="title" required />
+      </div>
+      <div class="field">
+        <label>Due Date</label>
+        <input type="date" [(ngModel)]="dueDateString" name="dueDate" required />
+      </div>
+      <button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Saving...' : 'Save Alert' }}
+      </button>
+    </form>
+  </div>

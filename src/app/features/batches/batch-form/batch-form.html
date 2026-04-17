@@ -1,0 +1,54 @@
+<div class="batch-form">
+    <div class="header">
+        <h1>New Batch</h1>
+        <a routerLink="/batches">Back</a>
+    </div>
+
+    <form (ngSubmit)="save()">
+        <div class="field">
+            <label>Photo</label>
+            <div class="image-picker" (click)="imageInput.click()">
+                @if (imagePreview()) {
+                    <img [src]="imagePreview()!" alt="Batch Preview" />
+                } @else {
+                    <span>Click to add a photo</span>
+                }
+            </div>
+            <input #imageInput type="file" accept="image/*"
+                (change)="onImageSelected($event)" style="display:none" />
+        </div>
+        <div class="field">
+            <label>Batch Name</label>
+            <input type="text" [(ngModel)]="batch.name" name="name" required />
+        </div>
+
+        <div class="field">
+            <label>Start Date</label>
+            <input type="date" [(ngModel)]="batch.startDate" name="startDate" required />
+        </div>
+
+        <div class="field">
+            <label>Status</label>
+            <select [(ngModel)]="batch.status" name="status">
+                <option value="primary">Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="conditioning">Conditioning</option>
+                <option value="complete">Complete</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Original Gravity</label>
+            <input type="number" [(ngModel)]="batch.originalGravity" name="originalGravity" step="0.0001" required />
+        </div>
+
+        <div class="field">
+            <label>Target ABV (%)</label>
+            <input type="number" [(ngModel)]="batch.targetAbv" name="targetABV" step="0.1" required />
+        </div>
+
+        <button type="submit" [disabled]="saving()">
+            {{ saving() ? 'Saving...' : 'Save Batch' }}
+        </button>
+    </form>
+</div>

@@ -1,0 +1,157 @@
+<div class="batch-detail">
+    @if (batch()) {
+      <div class="header">
+        <h1>{{ batch()!.name }}</h1>
+        <span class="status">{{ batch()!.status }}</span>
+        <a routerLink="/batches">Back to Batches</a>
+
+        <div class="batch-image-header">
+          @if (imagePreview() ?? batch()!.imageUrl; as imgSrc) {
+            <img [src]="imgSrc" alt="Batch Image" />
+          } @else {
+            <span>🍯</span>
+          }
+          <label class="change-photo">
+            Change Photo
+            <input type="file" accept="image/*" (change)="onImageSelected($event)" style="display: none" />
+          </label>
+        </div>
+      </div>
+
+      <div class="summary-cards">
+        <div class="card">
+          <label>Original Gravity</label>
+          <span>{{ batch()!.originalGravity }}</span>
+        </div>
+        <div class="card">
+          <label>Current Gravity</label>
+          <span>{{ batch()!.currentGravity }}</span>
+        </div>
+        <div class="card">
+          <label>Current ABV</label>
+          <span>{{ currentAbv() }}%</span>
+        </div>
+        <div class="card">
+          <label>Target ABV</label>
+          <span>{{ batch()!.targetAbv }}%</span>
+        </div>
+        <div class="card">
+          <label>Started</label>
+          <span>{{ batch()!.startDate }}</span>
+        </div>
+      </div>
+
+      <!-- Feedings -->
+      <div class="section">
+        <div class="section-header">
+          <h2>Feedings</h2>
+          <a [routerLink]="['/batches', batchId(), 'feeding', 'new']">Add Feeding</a>
+        </div>
+        @if (feedings().length === 0) {
+          <p>No feedings logged yet.</p>
+        } @else {
+          @for (feeding of feedings(); track feeding.id) {
+            <div class="item-card">
+              <span>Feeding #{{ feeding.feedingNumber }}</span>
+              <span>Pre: {{ feeding.preGravity }}</span>
+              <span>Post: {{ feeding.postGravity }}</span>
+              <span>{{ feeding.date }}</span>
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Gravity Readings -->
+      <div class="section">
+        <div class="section-header">
+          <h2>Gravity Readings</h2>
+          <a [routerLink]="['/batches', batchId(), 'gravity', 'new']">Add Reading</a>
+        </div>
+        @if (gravityReadings().length === 0) {
+          <p>No gravity readings logged yet.</p>
+        } @else {
+          @for (reading of gravityReadings(); track reading.id) {
+            <div class="item-card">
+              <span>{{ reading.reading }}</span>
+              <span>{{ reading.date }}</span>
+              @if (reading.notes) {
+                <span>{{ reading.notes }}</span>
+              }
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Ingredients -->
+      <div class="section">
+        <div class="section-header">
+          <h2>Ingredients</h2>
+          <a [routerLink]="['/batches', batchId(), 'ingredient', 'new']">Add Ingredient</a>
+        </div>
+        @if (ingredients().length === 0) {
+          <p>No ingredients added yet.</p>
+        } @else {
+          @for (ingredient of ingredients(); track ingredient.id) {
+            <div class="item-card">
+              <span>{{ ingredient.name }}</span>
+              <span>{{ ingredient.amount }} {{ ingredient.unit }}</span>
+              <span class="type">{{ ingredient.type }}</span>
+              @if (ingredient.notes) {
+                <span>{{ ingredient.notes }}</span>
+              }
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Notes -->
+      <div class="section">
+        <div class="section-header">
+          <h2>Notes</h2>
+        </div>
+        @if (notes().length === 0) {
+          <p>No notes yet.</p>
+        } @else {
+          @for (note of notes(); track note.id) {
+            <div class="item-card">
+              <span>{{ note.createdAt | date:'short' }}</span>
+              <p>{{ note.note }}</p>
+            </div>
+          }
+        }
+        <div class="add-note">
+          <textarea
+            [value]="newNote()"
+            (input)="newNote.set($any($event.target).value)"
+            placeholder="Add a new note..."
+            rows="3">
+          </textarea>
+          <button (click)="saveNote()" [disabled]="savingNote()">
+            {{ savingNote() ? 'Saving...' : 'Add Note'}}
+          </button>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="section">
+        <div class="section-header">
+          <h2>Alerts</h2>
+          <a [routerLink]="['/batches', batchId(), 'alert', 'new']">Add Alert</a>
+        </div>
+        <ul>
+          @for (alert of alerts(); track alert.id) {
+            <li>
+              <input type="checkbox" [checked]="alert.completed"
+                    (change)="toggleAlert(alert)" />
+              <span [style.text-decoration]="alert.completed ? 'line-through' : 'none'">
+                {{ alert.title }} — {{ alert.dueDate | date: 'mediumDate' }}
+              </span>
+            </li>
+          }
+        </ul>
+      </div>
+
+    } @else {
+      <p>Loading batch...</p>
+    }
+  </div>
