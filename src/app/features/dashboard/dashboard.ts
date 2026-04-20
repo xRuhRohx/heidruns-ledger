@@ -23,7 +23,7 @@ export class Dashboard {
     this.activeBatches().filter(b =>
       b.targetAbv != null &&
       b.currentGravity != null &&
-      Math.abs(this.quickAbv(b) - b.targetAbv) <= 1
+      Math.abs((b.currentAbv ?? 0) - (b.targetAbv ?? 0)) <= 1
     ).length
   );
 

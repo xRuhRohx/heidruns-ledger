@@ -9,6 +9,7 @@ export interface Batch {
     createdAt: string;
     updatedAt: string;
     imageUrl?: string;
+    currentAbv?: number;
 }
 
 export interface BatchNote {

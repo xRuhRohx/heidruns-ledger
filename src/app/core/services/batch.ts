@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-  import { Firestore, collection, collectionData, doc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from
+  import { Firestore, collection, collectionData, doc, addDoc, updateDoc, deleteDoc, query, where, orderBy, getDoc, getDocs } from
   '@angular/fire/firestore';
   import { map, Observable, of } from 'rxjs';
   import { Batch, BatchNote, Feeding, GravityReading, Ingredient, Alert } from '../models/models';
@@ -14,6 +14,12 @@ import { Injectable, inject } from '@angular/core';
     getBatches(): Observable<Batch[]> {
       const ref = collection(this.firestore, 'batches');
       return collectionData(ref, { idField: 'id' }) as Observable<Batch[]>;
+    }
+
+    async getBatchOnce(id: string): Promise<Batch | undefined> {
+      const docRef = doc(this.firestore, 'batches', id);
+      const snapshot = await getDoc(docRef);
+      return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } as Batch: undefined;
     }
 
     addBatch(batch: Batch): Promise<any> {
@@ -79,21 +85,6 @@ import { Injectable, inject } from '@angular/core';
       return addDoc(ref, note);
     }
 
-    // ---- ABV Calculation ----
-    calculateAbv(batch: Batch, feedings: Feeding[], currentGravity: number): number {
-      let totalAbv = 0;
-      let previousGravity = batch.originalGravity;
-
-      for (const feeding of feedings) {
-        totalAbv += (previousGravity - feeding.preGravity) * 131.25;
-        previousGravity = feeding.postGravity;
-      }
-
-      totalAbv += (previousGravity - currentGravity) * 131.25;
-
-      return Math.round(totalAbv * 100) / 100;
-    }
-
     // ---- Alerts ----
     getAlerts(batchId: string): Observable<Alert[]> {
       const col = collection(this.firestore, 'alerts');
@@ -128,5 +119,29 @@ import { Injectable, inject } from '@angular/core';
     completeAlert(alertId: string, completed: boolean) {
       const ref = doc(this.firestore, 'alerts', alertId);
       return updateDoc(ref, { completed });
+    }
+
+    // ---- ABV Calculation ----
+    calculateAbv(batch: Batch, feedings: Feeding[], currentGravity: number): number {
+      let totalAbv = 0;
+      let previousGravity = batch.originalGravity;
+
+      for (const feeding of feedings) {
+        totalAbv += (previousGravity - feeding.preGravity) * 131.25;
+        previousGravity = feeding.postGravity;
+      }
+
+      totalAbv += (previousGravity - currentGravity) * 131.25;
+
+      return Math.round(totalAbv * 100) / 100;
+    }
+
+    async recalculateAndSaveAbv(batchId: string, originalGravity: number, currentGravity: number): Promise<void> {
+      const feedingsRef = collection(this.firestore, 'feedings');
+      const q = query(feedingsRef, where('batchId', '==', batchId), orderBy('feedingNumber'));
+      const snapshot = await getDocs(q);
+      const feedings = snapshot.docs.map(d => d.data() as Feeding);
+      const abv = this.calculateAbv({ originalGravity } as Batch, feedings, currentGravity);
+      return this.updateBatch(batchId, { currentAbv: abv });
     }
   }
