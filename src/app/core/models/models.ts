@@ -9,6 +9,7 @@ export interface Batch {
     createdAt: string;
     updatedAt: string;
     imageUrl?: string;
+    currentAbv?: number;
 }
 
 export interface BatchNote {
@@ -46,6 +47,7 @@ export interface Ingredient {
     unit: 'lbs' | 'oz' | 'g' | 'kg' | 'gallons' | 'ml' | 'L';
     type: 'honey' | 'fruit' | 'spice' | 'nutrient' | 'yeast' | 'other';
     notes?: string;
+    addedDate: Date;
 }
 
 export interface Alert {

@@ -18,6 +18,7 @@ export class FeedingForm implements OnInit {
   saving = signal(false);
   batchId = signal<string>('');
   nextFeedingNumber = signal<number>(1);
+  originalGravity = 0;
 
   feeding: Feeding = {
     batchId: '',
@@ -36,6 +37,10 @@ export class FeedingForm implements OnInit {
     this.batchId.set(id);
     this.feeding.batchId = id;
 
+    this.batchService.getBatchOnce(id).then(batch => {
+      if (batch) this.originalGravity = batch.originalGravity;
+    });
+
     this.batchService.getFeedings(id).subscribe(feedings => {
       this.nextFeedingNumber.set(feedings.length + 1);
       this.feeding.feedingNumber = feedings.length + 1;
@@ -45,6 +50,8 @@ export class FeedingForm implements OnInit {
   save() {
     this.saving.set(true);
     this.batchService.addFeeding(this.feeding)
+      .then(() => this.batchService.updateBatch(this.batchId(), { currentGravity: this.feeding.postGravity }))
+      .then(() => this.batchService.recalculateAndSaveAbv(this.batchId(), this.originalGravity, this.feeding.postGravity))
       .then(() => {
         this.saving.set(false);
         this.router.navigate(['/batches', this.batchId()]);
@@ -52,6 +59,6 @@ export class FeedingForm implements OnInit {
       .catch((error: any) => {
         console.error('Error saving feeding:', error);
         this.saving.set(false);
-      });
+      })
   }
 }

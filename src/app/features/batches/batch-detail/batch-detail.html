@@ -2,7 +2,12 @@
     @if (batch()) {
       <div class="header">
         <h1>{{ batch()!.name }}</h1>
-        <span class="status">{{ batch()!.status }}</span>
+         <select class="status-select" [ngClass]="batch()!.status" (change)="updateStatus($event)">
+          <option value="primary" [selected]="batch()!.status === 'primary'">Primary</option>
+          <option value="secondary" [selected]="batch()!.status === 'secondary'">Secondary</option>
+          <option value="conditioning" [selected]="batch()!.status === 'conditioning'">Conditioning</option>
+          <option value="complete" [selected]="batch()!.status === 'complete'">Complete</option>
+         </select>
         <a routerLink="/batches">Back to Batches</a>
 
         <div class="batch-image-header">
@@ -51,11 +56,17 @@
           <p>No feedings logged yet.</p>
         } @else {
           @for (feeding of feedings(); track feeding.id) {
-            <div class="item-card">
+            <div class="item-card feeding-card"
+                [class.has-notes]="feeding.notes"
+                [class.expanded]="expandedId() === feeding.id"
+                (click)="toggleExpand(feeding.id)">
               <span>Feeding #{{ feeding.feedingNumber }}</span>
               <span>Pre: {{ feeding.preGravity }}</span>
               <span>Post: {{ feeding.postGravity }}</span>
-              <span>{{ feeding.date }}</span>
+              <span class="timestamp">{{ $any(feeding.date)?.toDate?.() ?? feeding.date | date: 'mediumDate' }}</span>
+              @if (expandedId() === feeding.id && feeding.notes) {
+                <div class="card-notes">{{ feeding.notes }}</div>
+              }
             </div>
           }
         }
@@ -71,11 +82,14 @@
           <p>No gravity readings logged yet.</p>
         } @else {
           @for (reading of gravityReadings(); track reading.id) {
-            <div class="item-card">
+            <div class="item-card gravity-card"
+                [class.has-notes]="reading.notes"
+                [class.expanded]="expandedId() === reading.id"
+                (click)="toggleExpand(reading.id)">
               <span>{{ reading.reading }}</span>
-              <span>{{ reading.date }}</span>
-              @if (reading.notes) {
-                <span>{{ reading.notes }}</span>
+              <span class="timestamp">{{ $any(reading.date)?.toDate?.() ?? reading.date | date: 'mediumDate' }}</span>
+              @if (expandedId() === reading.id && reading.notes) {
+                <div class="card-notes">{{ reading.notes }}</div>
               }
             </div>
           }
@@ -92,12 +106,16 @@
           <p>No ingredients added yet.</p>
         } @else {
           @for (ingredient of ingredients(); track ingredient.id) {
-            <div class="item-card">
+            <div class="item-card ingredient-card"
+                [class.has-notes]="ingredient.notes"
+                [class.expanded]="expandedId() === ingredient.id"
+                (click)="toggleExpand(ingredient.id)">
               <span>{{ ingredient.name }}</span>
               <span>{{ ingredient.amount }} {{ ingredient.unit }}</span>
               <span class="type">{{ ingredient.type }}</span>
-              @if (ingredient.notes) {
-                <span>{{ ingredient.notes }}</span>
+              <span class="timestamp">{{ $any(ingredient.addedDate)?.toDate?.() ?? ingredient.addedDate | date: 'mediumDate'}}</span>
+              @if (expandedId() === ingredient.id && ingredient.notes) {
+                <div class="card-notes">{{ ingredient.notes }}</div>
               }
             </div>
           }
@@ -113,9 +131,9 @@
           <p>No notes yet.</p>
         } @else {
           @for (note of notes(); track note.id) {
-            <div class="item-card">
-              <span>{{ note.createdAt | date:'short' }}</span>
+            <div class="item-card note-card">
               <p>{{ note.note }}</p>
+              <span class="timestamp">{{ $any(note.createdAt)?.toDate?.() ?? note.createdAt | date: 'mediumDate' }}</span>
             </div>
           }
         }

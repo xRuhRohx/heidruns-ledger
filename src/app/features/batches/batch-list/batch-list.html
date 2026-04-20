@@ -28,7 +28,7 @@
                   <div class="batch-stats">
                     <span>OG: {{ batch.originalGravity }}</span>
                     <span>CG: {{ batch.currentGravity }}</span>
-                    <span class="abv">ABV: ~{{ quickAbv(batch) }}%</span>
+                    <span class="abv">ABV: {{ batch.currentAbv ?? 0 }}%</span>
                   </div>
                   <div class="batch-date">Started: {{ batch.startDate | date: 'mediumDate' }}</div>
                 </div>

@@ -17,6 +17,7 @@ export class GravityForm implements OnInit {
 
   saving = signal(false);
   batchId = signal<string>('');
+  originalGravity = 0;
 
   reading: GravityReading = {
     batchId: '',
@@ -32,24 +33,24 @@ export class GravityForm implements OnInit {
 
     this.batchId.set(id);
     this.reading.batchId = id;
+
+    this.batchService.getBatchOnce(id).then(batch => {
+      if (batch) this.originalGravity = batch.originalGravity;
+    })
   }
 
   save() {
     this.saving.set(true);
     this.batchService.addGravityReading(this.reading)
-    .then(() => {
-      // Update the batch's currentGravity with this reading
-      return this.batchService.updateBatch(this.batchId(), {
-        currentGravity: this.reading.reading,
-      });
-    })
-    .then(() => {
-      this.saving.set(false);
-      this.router.navigate(['/batches', this.batchId()]);
-    })
-    .catch((error: any) => {
-      console.error('Error saving gravity reading:', error);
-      this.saving.set(false);
-    });
+      .then(() => this.batchService.updateBatch(this.batchId(), { currentGravity: this.reading.reading }))
+      .then(() => this.batchService.recalculateAndSaveAbv(this.batchId(), this.originalGravity, this.reading.reading))
+      .then(() => {
+        this.saving.set(false);
+        this.router.navigate(['/batches', this.batchId()]);
+      })
+      .catch((error: any) => {
+        console.error('Error saving gravity reading: ', error);
+        this.saving.set(false);
+      })
   }
 }
