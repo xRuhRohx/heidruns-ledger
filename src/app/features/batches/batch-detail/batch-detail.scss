@@ -273,16 +273,31 @@
     }
 
     @media (max-width: 600px) {
-    padding: 1rem;
+      padding: 1rem;
 
-    .header h1 { font-size: 1.4rem; }
-    .summary-cards { grid-template-columns: repeat(2, 1fr); }
+      .header h1 { font-size: 1.4rem; }
+      .summary-cards { grid-template-columns: repeat(2, 1fr); }
 
-    .item-card {
-      grid-template-columns: 1fr !important;
+      .item-card {
+        &.feeding-card {
+          grid-template-columns: 1fr 1fr;
+        }
 
-      .timestamp { text-align: left; }
-      .notes-cell { text-align: left; }
+        &.gravity-card {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        &.ingredient-card {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        &.note-card {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .timestamp {
+          text-align: left;
+        }
+      }
     }
-  }
   }
