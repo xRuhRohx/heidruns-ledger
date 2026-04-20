@@ -58,7 +58,7 @@ import { Injectable, inject } from '@angular/core';
     // ---- Ingredients ----
     getIngredients(batchId: string): Observable<Ingredient[]> {
       const ref = collection(this.firestore, 'ingredients');
-      const q = query(ref, where('batchId', '==', batchId));
+      const q = query(ref, where('batchId', '==', batchId), orderBy('addedDate'));
       return collectionData(q, { idField: 'id' }) as Observable<Ingredient[]>;
     }
 

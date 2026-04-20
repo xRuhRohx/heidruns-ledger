@@ -3,11 +3,11 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BatchService } from '../../../core/services/batch';
 import { Alert, Batch, BatchNote, Feeding, GravityReading, Ingredient } from '../../../core/models/models';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-batch-detail',
-  imports: [RouterLink, DatePipe, FormsModule],
+  imports: [RouterLink, DatePipe, FormsModule, NgClass],
   templateUrl: './batch-detail.html',
   styleUrl: './batch-detail.scss',
 })
@@ -27,6 +27,12 @@ export class BatchDetail implements OnInit {
   alerts = signal<Alert[]>([]);
   selectedFile: File | null = null;
   imagePreview = signal<string | null>(null);
+  expandedId = signal<string | null>(null);
+
+  toggleExpand(id: string | undefined) {
+    if (!id) return;
+    this.expandedId.set(this.expandedId() === id ? null : id);
+  }
 
   async onImageSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -102,6 +108,11 @@ export class BatchDetail implements OnInit {
     if (batch && currentGravity > 0) {
       this.currentAbv.set(this.batchService.calculateAbv(batch, feedings, currentGravity));
     }
+  }
+
+  updateStatus(event: Event) {
+    const status = (event.target as HTMLSelectElement).value as Batch['status'];
+    this.batchService.updateBatch(this.batchId(), { status });
   }
 
   saveNote() {

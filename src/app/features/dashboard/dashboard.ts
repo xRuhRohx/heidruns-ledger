@@ -19,12 +19,18 @@ export class Dashboard {
     this.batches().filter(b => b.status !== 'complete')
   );
 
-  nearTargetGravity = computed(() =>
+  nearTargetAbv = computed(() =>
     this.activeBatches().filter(b =>
+      b.targetAbv != null &&
       b.currentGravity != null &&
-      Math.abs(b.currentGravity - 1.028) <= 0.01
+      Math.abs(this.quickAbv(b) - b.targetAbv) <= 1
     ).length
   );
+
+  quickAbv(batch: Batch): number {
+    if (!batch.originalGravity || !batch.currentGravity) return 0;
+    return Math.round((batch.originalGravity - batch.currentGravity) * 131.25 * 100) / 100;
+  }
 
   upcomingAlerts = computed(() => {
     const now = new Date();

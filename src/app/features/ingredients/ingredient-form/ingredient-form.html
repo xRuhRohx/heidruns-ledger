@@ -18,6 +18,8 @@
           <option value="fruit">Fruit</option>
           <option value="spice">Spice</option>
           <option value="nutrient">Nutrient</option>
+          <option value="yeast">Yeast</option>
+          <option value="water">Water</option>
           <option value="other">Other</option>
         </select>
       </div>
@@ -38,6 +40,11 @@
           <option value="ml">ml</option>
           <option value="L">L</option>
         </select>
+      </div>
+
+      <div class="field">
+        <label>Date Added</label>
+        <input type="date" [(ngModel)]="addedDateString" name="addedDate" required />
       </div>
 
       <div class="field">

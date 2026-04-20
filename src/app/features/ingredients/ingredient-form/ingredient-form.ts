@@ -17,6 +17,7 @@ export class IngredientForm implements OnInit {
 
   saving = signal(false);
   batchId = signal<string>('');
+  addedDateString = new Date().toISOString().split('T')[0];
 
   ingredient: Ingredient = {
     batchId: '',
@@ -24,7 +25,8 @@ export class IngredientForm implements OnInit {
     amount: 0,
     unit: 'lbs',
     type: 'honey',
-    notes: ''
+    notes: '',
+    addedDate: new Date()
   };
 
   ngOnInit() {
@@ -37,6 +39,7 @@ export class IngredientForm implements OnInit {
 
   save() {
     this.saving.set(true);
+    this.ingredient.addedDate = new Date(this.addedDateString);
     this.batchService.addIngredient(this.ingredient)
       .then(() => {
         this.saving.set(false);

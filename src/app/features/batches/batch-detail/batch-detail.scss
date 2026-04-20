@@ -57,6 +57,28 @@
 
         &:hover { color: var(--color-text); }
       }
+
+      .status-select {
+        padding: 0.3rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: capitalize;
+        background: #EAF0DC;
+        border: none;
+        cursor: pointer;
+        appearance: auto;
+
+        &.primary { color: var(--color-status-primary); background-color: var(--color-status-primary-tint); }
+        &.secondary { color: var(--color-status-secondary); background-color: var(--color-status-secondary-tint); }
+        &.conditioning { color: var(--color-status-conditioning); background-color: var(--color-status-conditioning-tint); }
+        &.complete { color: var(--color-status-complete); background-color: var(--color-status-complete-tint); }
+
+        &:focus {
+          outline: none;
+          box-shadow: 000 2px rgba(74, 44, 10, 0.1);
+        }
+      }
     }
 
     .summary-cards {
@@ -127,20 +149,63 @@
     }
 
     .item-card {
-      display: flex;
+      display: grid;
       gap: 1rem;
       padding: 0.75rem 1rem;
       border: 1px solid var(--color-border-light);
+      border-left: 3px solid transparent;
       border-radius: 6px;
       margin-bottom: 0.5rem;
       font-size: 0.9rem;
-      flex-wrap: wrap;
       align-items: center;
       background: var(--color-surface);
+      cursor: default;
+
+      &.feeding-card {
+        grid-template-columns: 1fr 1fr 1fr auto;
+      }
+
+      &.gravity-card {
+        grid-template-columns: 1fr auto;
+      }
+
+      &.ingredient-card {
+        grid-template-columns: 2fr 1fr 1fr auto;
+      }
+
+      &.note-card {
+        grid-template-columns: 1fr auto;
+        p { margin: 0; }
+      }
+
+      &.has-notes {
+        cursor: pointer;
+        border-left-color: var(--color-accent);
+      }
+
+      &.expanded {
+        background: #FAF0DC;
+        border-left-color: var(--color-primary);
+      }
+
+      .card-notes {
+        grid-column: 1 / -1;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--color-border-light);
+        color: var(--color-text-muted);
+        font-style: italic;
+        font-size: 0.85rem;
+      }
+
+      .timestamp {
+        text-align: right;
+        color: var(--color-text-muted);
+        font-size: 0.8rem;
+        white-space: nowrap;
+      }
 
       .type {
-        margin-left: auto;
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         color: var(--color-text-muted);
         text-transform: capitalize;
       }
@@ -194,13 +259,13 @@
 
       button {
         align-self: flex-end;
-        padding: 0.5rem 1.5rem;
-        background: white;
+        padding: 0.25rem 0.75rem;
+        background-color: transparent;
         color: var(--color-primary);
         border: 1px solid var(--color-primary);
-        border-radius: 6px;
+        border-radius: 4px;
         cursor: pointer;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
 
         &:hover:not(:disabled) { background: var(--color-primary); color: white; }
         &:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -208,15 +273,16 @@
     }
 
     @media (max-width: 600px) {
-      padding: 1rem;
+    padding: 1rem;
 
-      .header h1 { font-size: 1.4rem; }
-      .summary-cards { grid-template-columns: repeat(2, 1fr); }
+    .header h1 { font-size: 1.4rem; }
+    .summary-cards { grid-template-columns: repeat(2, 1fr); }
 
-      .item-card {
-        flex-direction: column;
-        gap: 0.25rem;
-        .type { margin-left: 0; }
-      }
+    .item-card {
+      grid-template-columns: 1fr !important;
+
+      .timestamp { text-align: left; }
+      .notes-cell { text-align: left; }
     }
+  }
   }
