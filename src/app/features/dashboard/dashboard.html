@@ -16,6 +16,33 @@
         <span class="stat-value">{{ overdueAlerts() }}</span>
         <span class="stat-label">Overdue Alerts</span>
       </div>
+
+      <!-- Gravity Trends Accordion -->
+      <div class="trends-accordion" (click)="trendsExpanded.set(!trendsExpanded())">
+        <div class="accordion-header">
+          <span>Gravity Trends</span>
+          <span class="chevron" [class.open]="trendsExpanded()">▼</span>
+        </div>
+        @if (trendsExpanded()) {
+          <div class="accordion-body" (click)="$event.stopPropagation()">
+            <div class="filter-buttons">
+              <button [class.active]="primaryEnabled()"
+                      (click)="primaryEnabled.set(!primaryEnabled())">Primary</button>
+              <button [class.active]="secondaryEnabled()"
+                      (click)="secondaryEnabled.set(!secondaryEnabled())">Secondary</button>
+              <button [class.active]="tertiaryEnabled()"
+                      (click)="tertiaryEnabled.set(!tertiaryEnabled())">Tertiary</button>
+            </div>
+            <div class="chart-container">
+              <canvas baseChart
+                [data]="chartData()"
+                [options]="chartOptions"
+                type="line">
+              </canvas>
+            </div>
+          </div>
+        }
+      </div>
     </div>
 
     <div class="batch-list">

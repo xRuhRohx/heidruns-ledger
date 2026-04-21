@@ -80,6 +80,12 @@
           <h2>Gravity Readings</h2>
           <a [routerLink]="['/batches', batchId(), 'gravity', 'new']">Add Reading</a>
         </div>
+
+        <app-gravity-chart
+          [readings]="gravityReadings()"
+          [originalGravity]="batch()!.originalGravity">
+        </app-gravity-chart>
+
         @if (gravityReadings().length === 0) {
           <p>No gravity readings logged yet.</p>
         } @else {

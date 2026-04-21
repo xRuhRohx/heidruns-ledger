@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { BatchService } from '../../../core/services/batch';
 import { Alert, Batch, BatchNote, Feeding, GravityReading, Ingredient } from '../../../core/models/models';
 import { DatePipe, NgClass } from '@angular/common';
+import { GravityChartComponent } from '../../gravity-log/gravity-chart/gravity-chart';
 
 @Component({
   selector: 'app-batch-detail',
-  imports: [RouterLink, DatePipe, FormsModule, NgClass],
+  imports: [RouterLink, DatePipe, FormsModule, NgClass, GravityChartComponent],
   templateUrl: './batch-detail.html',
   styleUrl: './batch-detail.scss',
 })

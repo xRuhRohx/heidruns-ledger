@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { BatchService } from '../../../core/services/batch';
-import { Batch }  from '../../../core/models/models';
+import { Batch } from '../../../core/models/models';
 
 @Component({
   selector: 'app-batch-list',

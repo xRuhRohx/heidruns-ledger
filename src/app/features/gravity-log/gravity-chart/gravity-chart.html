@@ -1,1 +1,9 @@
-<p>gravity-chart works!</p>
+@if (readings().length > 0) {
+    <div class="chart-wrap">
+      <canvas baseChart
+        [data]="chartData()"
+        [options]="chartOptions"
+        type="line">
+      </canvas>
+    </div>
+  }

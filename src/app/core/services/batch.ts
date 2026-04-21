@@ -61,6 +61,13 @@ import { Injectable, inject } from '@angular/core';
       return addDoc(ref, reading);
     }
 
+    getAllGravityReadings(batchIds: string[]): Observable<GravityReading[]> {
+      if (batchIds.length === 0) return of([]);
+      const ref = collection(this.firestore, 'gravityReadings');
+      const q = query(ref, where('batchId', 'in', batchIds));
+      return collectionData(q, { idField: 'id' }) as Observable<GravityReading[]>;
+    }
+
     // ---- Ingredients ----
     getIngredients(batchId: string): Observable<Ingredient[]> {
       const ref = collection(this.firestore, 'ingredients');
