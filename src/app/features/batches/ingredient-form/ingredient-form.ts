@@ -39,7 +39,8 @@ export class IngredientForm implements OnInit {
 
   save() {
     this.saving.set(true);
-    this.ingredient.addedDate = new Date(this.addedDateString);
+    const [year, month, day] = this.addedDateString.split('-').map(Number);
+    this.ingredient.addedDate = new Date(year, month - 1, day);
     this.batchService.addIngredient(this.ingredient)
       .then(() => {
         this.saving.set(false);

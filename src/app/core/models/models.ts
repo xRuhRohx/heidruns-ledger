@@ -2,7 +2,7 @@ export interface Batch {
     id?: string;
     name: string;
     startDate: string;
-    status: 'primary' | 'secondary' | 'conditioning' | 'complete';
+    status: 'primary' | 'secondary' | 'tertiary' | 'conditioning' | 'aging' | 'complete';
     targetAbv: number;
     originalGravity: number;
     currentGravity: number;
@@ -45,7 +45,7 @@ export interface Ingredient {
     name: string;
     amount: number;
     unit: 'lbs' | 'oz' | 'g' | 'kg' | 'gallons' | 'ml' | 'L';
-    type: 'honey' | 'fruit' | 'spice' | 'nutrient' | 'yeast' | 'other';
+    type: 'honey' | 'fruit' | 'spice' | 'nutrient' | 'yeast' | 'water' | 'other';
     notes?: string;
     addedDate: Date;
 }

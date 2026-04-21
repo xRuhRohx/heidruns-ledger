@@ -71,7 +71,9 @@
 
         &.primary { color: var(--color-status-primary); background-color: var(--color-status-primary-tint); }
         &.secondary { color: var(--color-status-secondary); background-color: var(--color-status-secondary-tint); }
+        &.tertiary { color: var(--color-status-tertiary); background-color: var(--color-status-tertiary-tint); }
         &.conditioning { color: var(--color-status-conditioning); background-color: var(--color-status-conditioning-tint); }
+        &.aging { color: var(--color-status-aging); background-color: var(--color-status-aging-tint); }
         &.complete { color: var(--color-status-complete); background-color: var(--color-status-complete-tint); }
 
         &:focus {

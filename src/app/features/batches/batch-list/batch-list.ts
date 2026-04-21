@@ -18,7 +18,9 @@ export class BatchList implements OnInit {
   readonly statusGroups = [
     { label: 'Primary Fermentation', status: 'primary' as const },
     { label: 'Secondary Fermentation', status: 'secondary' as const },
+    { label: 'Tertiary Fermentation', status: 'tertiary' as const },
     { label: 'Conditioning', status: 'conditioning' as const },
+    { label: 'Aging', status: 'aging' as const },
     { label: 'Completed', status: 'complete' as const }, 
   ]
 

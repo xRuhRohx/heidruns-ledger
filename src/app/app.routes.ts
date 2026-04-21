@@ -41,7 +41,7 @@ export const routes: Routes = [
     },
     {
         path: 'batches/:id/ingredient/new',
-        loadComponent: () => import('./features/ingredients/ingredient-form/ingredient-form')
+        loadComponent: () => import('./features/batches/ingredient-form/ingredient-form')
             .then(m => m.IngredientForm),
         canActivate: [authGuard]
     },

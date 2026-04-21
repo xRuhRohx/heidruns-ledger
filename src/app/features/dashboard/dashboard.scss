@@ -103,7 +103,9 @@
 
         &.primary { color: var(--color-status-primary); }
         &.secondary { color: var(--color-status-secondary); }
+        &.tertiary { color: var(--color-status-tertiary); }
         &.conditioning { color: var(--color-status-conditioning); }
+        &.aging { color: var(--color-status-aging); }
       }
     }
 
