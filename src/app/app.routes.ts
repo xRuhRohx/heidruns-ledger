@@ -51,11 +51,6 @@ export const routes: Routes = [
             .then(m => m.AlertFormComponent), 
             canActivate: [authGuard] 
     },
-    { path: 'gravity-log', 
-        loadComponent: () => import('./features/gravity-log/gravity-list/gravity-list')
-            .then(m => m.GravityList), 
-        canActivate: [authGuard] 
-    },
     { path: 'alerts', 
         loadComponent: () => import('./features/alerts/alert-list/alert-list')
             .then(m => m.AlertList), 
