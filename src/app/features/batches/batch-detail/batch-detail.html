@@ -2,14 +2,7 @@
     @if (batch()) {
       <div class="header">
         <h1>{{ batch()!.name }}</h1>
-         <select class="status-select" [ngClass]="batch()!.status" (change)="updateStatus($event)">
-          <option value="primary" [selected]="batch()!.status === 'primary'">Primary</option>
-          <option value="secondary" [selected]="batch()!.status === 'secondary'">Secondary</option>
-          <option value="tertiary" [selected]="batch()!.status === 'tertiary'">Tertiary</option>
-          <option value="conditioning" [selected]="batch()!.status === 'conditioning'">Conditioning</option>
-          <option value="aging" [selected]="batch()!.status === 'aging'">Aging</option>
-          <option value="complete" [selected]="batch()!.status === 'complete'">Complete</option>
-         </select>
+         
         <a routerLink="/batches">Back to Batches</a>
 
         <div class="batch-image-header">
@@ -47,6 +40,21 @@
           <span>{{ batch()!.startDate }}</span>
         </div>
       </div>
+
+      <!-- Status -->
+       <div class="section">
+        <div class="section-header">
+          <h2>Status</h2>
+          <select class="status-select" [ngClass]="batch()!.status" (change)="updateStatus($event)">
+            <option value="primary" [selected]="batch()!.status === 'primary'">Primary</option>
+            <option value="secondary" [selected]="batch()!.status === 'secondary'">Secondary</option>
+            <option value="tertiary" [selected]="batch()!.status === 'tertiary'">Tertiary</option>
+            <option value="conditioning" [selected]="batch()!.status === 'conditioning'">Conditioning</option>
+            <option value="aging" [selected]="batch()!.status === 'aging'">Aging</option>
+            <option value="complete" [selected]="batch()!.status === 'complete'">Complete</option>
+          </select>
+        </div>
+       </div>
 
       <!-- Feedings -->
       <div class="section">

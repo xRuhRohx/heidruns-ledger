@@ -148,6 +148,30 @@
 
         &:hover { background: var(--color-primary); color: white; }
       }
+
+      .status-select {
+        padding: 0.3rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: capitalize;
+        background: #EAF0DC;
+        border: none;
+        cursor: pointer;
+        appearance: auto;
+
+        &.primary { color: var(--color-status-primary); background-color: var(--color-status-primary-tint); }
+        &.secondary { color: var(--color-status-secondary); background-color: var(--color-status-secondary-tint); }
+        &.tertiary { color: var(--color-status-tertiary); background-color: var(--color-status-tertiary-tint); }
+        &.conditioning { color: var(--color-status-conditioning); background-color: var(--color-status-conditioning-tint); }
+        &.aging { color: var(--color-status-aging); background-color: var(--color-status-aging-tint); }
+        &.complete { color: var(--color-status-complete); background-color: var(--color-status-complete-tint); }
+
+        &:focus {
+          outline: none;
+          box-shadow: 000 2px rgba(74, 44, 10, 0.1);
+        }
+      }
     }
 
     .item-card {
