@@ -49,6 +49,27 @@
             <input type="number" [(ngModel)]="batch.targetAbv" name="targetABV" step="0.1" required />
         </div>
 
+        <div class="field">
+            <label>Tilt Hydrometer Color <span class="optional">(optional)</span></label>
+            <select [(ngModel)]="batch.tiltColor" name="tiltColor">
+                <option [ngValue]="undefined">None — manual entry only</option>
+                <option value="Red">Red</option>
+                <option value="Green">Green</option>
+                <option value="Black">Black</option>
+                <option value="Purple">Purple</option>
+                <option value="Orange">Orange</option>
+                <option value="Blue">Blue</option>
+                <option value="Yellow">Yellow</option>
+                <option value="Pink">Pink</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Tilt Hourly Threshold <span class="optional">(optional — gravity at which to switch to hourly
+        logging)</span></label>
+            <input type="number" [(ngModel)]="batch.tiltHourlyThreshold" name="tiltHourlyThreshold" step="0.001" />
+        </div>
+
         <button type="submit" [disabled]="saving()">
             {{ saving() ? 'Saving...' : 'Save Batch' }}
         </button>

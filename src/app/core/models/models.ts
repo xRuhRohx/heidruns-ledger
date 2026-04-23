@@ -1,3 +1,5 @@
+export type TiltColor = 'Red' | 'Green' | 'Black' | 'Purple' | 'Orange' | 'Blue' | 'Yellow' | 'Pink';
+
 export interface Batch {
     id?: string;
     name: string;
@@ -10,6 +12,8 @@ export interface Batch {
     updatedAt: string;
     imageUrl?: string;
     currentAbv?: number;
+    tiltColor?: TiltColor;
+    tiltHourlyThreshold?: number;
 }
 
 export interface BatchNote {
