@@ -1,6 +1,6 @@
 <div class="alert-form">
     <div class="header">
-      <h1>Add Alert</h1>
+      <h1>{{ isEditing() ? 'Edit Alert' : 'Add Alert' }}</h1>
       <a [routerLink]="['/batches', batchId()]">Back</a>
     </div>
     <form (ngSubmit)="save()">
@@ -8,12 +8,31 @@
         <label>Title</label>
         <input [(ngModel)]="alert.title" name="title" required />
       </div>
+
       <div class="field">
-        <label>Due Date</label>
-        <input type="date" [(ngModel)]="dueDateString" name="dueDate" required />
+        <label>Alert Type</label>
+        <div class="toggle">
+          <button type="button" [class.active]="alertMode() === 'date'" (click)="setMode('date')">Date</button>
+          <button type="button" [class.active]="alertMode() === 'gravity'" (click)="setMode('gravity')">Gravity</button>
+        </div>
       </div>
+
+      @if (alertMode() === 'date') {
+        <div class="field">
+          <label>Date & Time</label>
+          <input type="datetime-local" [(ngModel)]="dueDateString" name="dueDate" />
+        </div>
+      }
+
+      @if (alertMode() === 'gravity') {
+        <div class="field">
+          <label>Gravity Threshold</label>
+          <input type="number" [(ngModel)]="alert.gravityThreshold" name="gravityThreshold" step="0.0001" />
+        </div>
+      }
+
       <button type="submit" [disabled]="saving()">
-        {{ saving() ? 'Saving...' : 'Save Alert' }}
+        {{ saving() ? 'Saving...' : (isEditing() ? 'Update Alert' : 'Save Alert') }}
       </button>
     </form>
   </div>

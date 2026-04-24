@@ -1,6 +1,6 @@
 <div class="ingredient-form">
     <div class="header">
-      <h1>Add Ingredient</h1>
+      <h1>{{ isEditing() ? 'Edit Ingredient' : 'Add Ingredient' }}</h1>
       <a [routerLink]="['/batches', batchId()]">Back</a>
     </div>
 
@@ -10,7 +10,6 @@
         <input type="text" [(ngModel)]="ingredient.name" name="name"
                placeholder="e.g. Wildflower Honey" required />
       </div>
-
       <div class="field">
         <label>Type</label>
         <select [(ngModel)]="ingredient.type" name="type">
@@ -23,12 +22,10 @@
           <option value="other">Other</option>
         </select>
       </div>
-
       <div class="field">
         <label>Amount</label>
         <input type="number" [(ngModel)]="ingredient.amount" name="amount" step="0.01" required />
       </div>
-
       <div class="field">
         <label>Unit</label>
         <select [(ngModel)]="ingredient.unit" name="unit">
@@ -41,19 +38,16 @@
           <option value="L">L</option>
         </select>
       </div>
-
       <div class="field">
         <label>Date Added</label>
         <input type="date" [(ngModel)]="addedDateString" name="addedDate" required />
       </div>
-
       <div class="field">
         <label>Notes</label>
         <textarea [(ngModel)]="ingredient.notes" name="notes" rows="3"></textarea>
       </div>
-
       <button type="submit" [disabled]="saving()">
-        {{ saving() ? 'Saving...' : 'Save Ingredient' }}
+        {{ saving() ? 'Saving...' : (isEditing() ? 'Update Ingredient' : 'Save Ingredient') }}
       </button>
     </form>
   </div>
