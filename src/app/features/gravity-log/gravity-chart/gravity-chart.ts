@@ -2,6 +2,7 @@ import { Component, computed, input } from '@angular/core';
   import { NgChartsModule } from 'ng2-charts';
   import { ChartConfiguration } from 'chart.js';
   import { GravityReading } from '../../../core/models/models';
+  import { parseDate } from '../../../core/utils/date';
 
   @Component({
     selector: 'app-gravity-chart',
@@ -15,18 +16,17 @@ import { Component, computed, input } from '@angular/core';
     originalGravity = input<number>(0);
 
     chartData = computed(() => {
-      const sorted = [...this.readings()].sort((a, b) => {
-        const dateA = (a.date as any)?.toDate?.() ?? new Date(a.date);
-        const dateB = (b.date as any)?.toDate?.() ?? new Date(b.date);
-        return dateA - dateB;
-      });
+      const sorted = [...this.readings()].sort((a, b) =>
+        parseDate(a.date).getTime() - parseDate(b.date).getTime()
+      );
 
       const labels = [
         'Start',
-        ...sorted.map(r => {
-          const d = (r.date as any)?.toDate?.() ?? new Date(r.date);
-          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        })
+        ...sorted.map(r =>
+          parseDate(r.date).toLocaleString('en-US', {
+            month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+          })
+        )
       ];
 
       const data = [
@@ -51,18 +51,10 @@ import { Component, computed, input } from '@angular/core';
     chartOptions: ChartConfiguration['options'] = {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false }
-      },
+      plugins: { legend: { display: false } },
       scales: {
-        y: {
-          ticks: { font: { size: 10 } },
-          grid: { color: 'rgba(0,0,0,0.05)' }
-        },
-        x: {
-          ticks: { font: { size: 10 } },
-          grid: { display: false }
-        }
+        y: { ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+        x: { ticks: { font: { size: 10 } }, grid: { display: false } }
       }
     };
   }

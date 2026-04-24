@@ -30,7 +30,7 @@
                     <span>CG: {{ batch.currentGravity }}</span>
                     <span class="abv">ABV: {{ batch.currentAbv ?? 0 }}%</span>
                   </div>
-                  <div class="batch-date">Started: {{ batch.startDate | date: 'mediumDate' }}</div>
+                  <div class="batch-date">Started: {{ formatDateOnly(batch.startDate) }}</div>
                 </div>
               </a>
             }
