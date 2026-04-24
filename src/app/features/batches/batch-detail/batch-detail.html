@@ -2,6 +2,11 @@
     @if (batch()) {
       <div class="header">
         <h1>{{ batch()!.name }}</h1>
+        @if (batch()!.tiltColor) {
+          <span class="tilt-color">Tilt-Color: {{ batch()!.tiltColor }}</span>
+        }
+        <a [routerLink]="['/batches', batchId(), 'edit']">Edit Batch</a>
+        <button class="btn-danger" (click)="deleteBatch()">Delete Batch</button>
         <a routerLink="/batches">Back to Batches</a>
         <div class="batch-image-header">
           @if (imagePreview() ?? batch()!.imageUrl; as imgSrc) {
@@ -63,20 +68,26 @@
         @if (feedings().length === 0) {
           <p>No feedings logged yet.</p>
         } @else {
-          @for (feeding of feedings(); track feeding.id) {
-            <div class="item-card feeding-card"
-                [class.has-notes]="feeding.notes"
-                [class.expanded]="expandedId() === feeding.id"
-                (click)="toggleExpand(feeding.id)">
-              <span>Feeding #{{ feeding.feedingNumber }}</span>
-              <span>Pre: {{ feeding.preGravity }}</span>
-              <span>Post: {{ feeding.postGravity }}</span>
-              <span class="timestamp">{{ formatDateTime(feeding.date) }}</span>
-              @if (expandedId() === feeding.id && feeding.notes) {
-                <div class="card-notes">{{ feeding.notes }}</div>
-              }
-            </div>
-          }
+            @for (feeding of feedings(); track feeding.id) {
+              <div class="item-card feeding-card"
+                  [class.has-notes]="feeding.notes"
+                  [class.expanded]="expandedId() === feeding.id"
+                  (click)="toggleExpand(feeding.id)">
+                <span>Feeding #{{ feeding.feedingNumber }}</span>
+                <span>Pre: {{ feeding.preGravity }}</span>
+                <span>Post: {{ feeding.postGravity }}</span>
+                <span class="timestamp">{{ formatDateTime(feeding.date) }}</span>
+                @if (expandedId() === feeding.id) {
+                  @if (feeding.notes) {
+                    <div class="card-notes">{{ feeding.notes }}</div>
+                  }
+                  <div class="card-actions" (click)="$event.stopPropagation()">
+                    <a [routerLink]="['/batches', batchId(), 'feeding', feeding.id, 'edit']">Edit</a>
+                    <button class="btn-danger" (click)="deleteFeeding(feeding)">Delete</button>
+                  </div>
+                }
+              </div>
+            }
         }
       </div>
 
@@ -102,8 +113,14 @@
                 (click)="toggleExpand(reading.id)">
               <span>{{ reading.reading }}</span>
               <span class="timestamp">{{ formatDateTime(reading.date) }}</span>
-              @if (expandedId() === reading.id && reading.notes) {
-                <div class="card-notes">{{ reading.notes }}</div>
+              @if (expandedId() === reading.id) {
+                @if (reading.notes) {
+                  <div class="card-notes">{{ reading.notes }}</div>
+                }
+                <div class="card-actions" (click)="$event.stopPropagation()">
+                  <a [routerLink]="['/batches', batchId(), 'gravity', reading.id, 'edit']">Edit</a>
+                  <button class="btn-danger" (click)="deleteGravityReading(reading)">Delete</button>
+                </div>
               }
             </div>
           }
@@ -128,8 +145,14 @@
               <span>{{ ingredient.amount }} {{ ingredient.unit }}</span>
               <span class="type">{{ ingredient.type }}</span>
               <span class="timestamp">{{ formatDateOnly(ingredient.addedDate) }}</span>
-              @if (expandedId() === ingredient.id && ingredient.notes) {
-                <div class="card-notes">{{ ingredient.notes }}</div>
+              @if (expandedId() === ingredient.id) {
+                @if (ingredient.notes) {
+                  <div class="card-notes">{{ ingredient.notes }}</div>
+                }
+                <div class="card-actions" (click)="$event.stopPropagation()">
+                  <a [routerLink]="['/batches', batchId(), 'ingredient', ingredient.id, 'edit']">Edit</a>
+                  <button class="btn-danger" (click)="deleteIngredient(ingredient)">Delete</button>
+                </div>
               }
             </div>
           }
@@ -145,9 +168,16 @@
           <p>No notes yet.</p>
         } @else {
           @for (note of notes(); track note.id) {
-            <div class="item-card note-card">
+            <div class="item-card note-card"
+              [class.expanded]="expandedId() === note.id"
+              (click)="toggleExpand(note.id)">
               <p>{{ note.note }}</p>
               <span class="timestamp">{{ formatDateTime(note.createdAt) }}</span>
+              @if (expandedId() === note.id) {
+                <div class="card-actions" (click)="$event.stopPropagation()">
+                  <button class="btn-danger" (click)="deleteNote(note)">Delete</button>
+                </div>
+              }
             </div>
           }
         }
@@ -175,8 +205,13 @@
             <li>
               <input type="checkbox" [checked]="alert.completed" (change)="toggleAlert(alert)" />
               <span [style.text-decoration]="alert.completed ? 'line-through' : 'none'">
-                {{ alert.title }} — {{ formatDateOnly(alert.dueDate) }}
+                {{ alert.title }} —
+                {{ alert.gravityThreshold != null ? 'Gravity ≤ ' + alert.gravityThreshold : formatDateTime(alert.dueDate) }}
               </span>
+              <div class="card-actions">
+                <a [routerLink]="['/batches', batchId(), 'alert', alert.id, 'edit']">Edit</a>
+                <button class="btn-danger" (click)="deleteAlert(alert)">Delete</button>
+              </div>
             </li>
           }
         </ul>

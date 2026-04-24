@@ -37,6 +37,19 @@ import { Injectable, inject } from '@angular/core';
       return deleteDoc(ref);
     }
 
+    async deleteBatchWithData(id: string): Promise<void> {
+      const collections = ['feedings', 'gravityReadings', 'ingredients', 'batchNotes', 'alerts'];
+
+      for (const col of collections) {
+        const ref = collection(this.firestore, col);
+        const q = query(ref, where('batchId', '==', id));
+        const snapshot = await getDocs(q);
+        await Promise.all(snapshot.docs.map(d => deleteDoc(d.ref)));
+      }
+
+      return this.deleteBatch(id);
+    }
+
     // ---- Feedings ----
     getFeedings(batchId: string): Observable<Feeding[]> {
       const ref = collection(this.firestore, 'feedings');
@@ -47,6 +60,22 @@ import { Injectable, inject } from '@angular/core';
     addFeeding(feeding: Feeding): Promise<any> {
       const ref = collection(this.firestore, 'feedings');
       return addDoc(ref, feeding);
+    }
+
+    async getFeedingOnce(id: string): Promise<Feeding | undefined> {
+      const docRef = doc(this.firestore, 'feedings', id);
+      const snapshot = await getDoc(docRef);
+      return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } as Feeding : undefined;
+    }
+
+    updateFeeding(id: string, feeding: Partial<Feeding>): Promise<void> {
+      const ref = doc(this.firestore, 'feedings', id);
+      return updateDoc(ref, { ...feeding });
+    }
+
+    deleteFeeding(id: string): Promise<void> {
+      const ref = doc(this.firestore, 'feedings', id);
+      return deleteDoc(ref);
     }
 
     // ---- Gravity Readings ----
@@ -68,6 +97,22 @@ import { Injectable, inject } from '@angular/core';
       return collectionData(q, { idField: 'id' }) as Observable<GravityReading[]>;
     }
 
+    async getGravityReadingOnce(id: string): Promise<GravityReading | undefined> {
+      const docRef = doc(this.firestore, 'gravityReadings', id);
+      const snapshot = await getDoc(docRef);
+      return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } as GravityReading : undefined;
+    }
+
+    updateGravityReading(id: string, reading: Partial<GravityReading>): Promise<void> {
+      const ref = doc(this.firestore, 'gravityReadings', id);
+      return updateDoc(ref, { ...reading });
+    }
+
+    deleteGravityReading(id: string): Promise<void> {
+      const ref = doc(this.firestore, 'gravityReadings', id);
+      return deleteDoc(ref);
+    }
+
     // ---- Ingredients ----
     getIngredients(batchId: string): Observable<Ingredient[]> {
       const ref = collection(this.firestore, 'ingredients');
@@ -78,6 +123,22 @@ import { Injectable, inject } from '@angular/core';
     addIngredient(ingredient: Ingredient): Promise<any> {
       const ref = collection(this.firestore, 'ingredients');
       return addDoc(ref, ingredient);
+    }
+
+    async getIngredientOnce(id: string): Promise<Ingredient | undefined> {
+      const docRef = doc(this.firestore, 'ingredients', id);
+      const snapshot = await getDoc(docRef);
+      return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } as Ingredient : undefined;
+    }
+
+    updateIngredient(id: string, ingredient: Partial<Ingredient>): Promise<void> {
+      const ref = doc(this.firestore, 'ingredients', id);
+      return updateDoc(ref, { ...ingredient });
+    }
+
+    deleteIngredient(id: string): Promise<void> {
+      const ref = doc(this.firestore, 'ingredients', id);
+      return deleteDoc(ref);
     }
 
     // ---- Notes ----
@@ -92,15 +153,20 @@ import { Injectable, inject } from '@angular/core';
       return addDoc(ref, note);
     }
 
+    deleteNote(id: string): Promise<void> {
+      const ref = doc(this.firestore, 'batchNotes', id);
+      return deleteDoc(ref);
+    }
+
     // ---- Alerts ----
     getAlerts(batchId: string): Observable<Alert[]> {
       const col = collection(this.firestore, 'alerts');
-      const q = query(col, where('batchId', '==', batchId), orderBy('dueDate', 'asc'));
+      const q = query(col, where('batchId', '==', batchId), orderBy('createdAt', 'asc'));
       return (collectionData(q, { idField: 'id' }) as Observable<any[]>).pipe(
         map(alerts => alerts.map(a => ({
           ...a,
           dueDate: a.dueDate ? (a.dueDate.toDate?.() ?? a.dueDate) : null,
-          createAt: a.createdAt ? (a.createdAt.toDate?.() ?? a.createdAt) : null
+          createdAt: a.createdAt ? (a.createdAt.toDate?.() ?? a.createdAt) : null
         } as Alert)))
       );
     }
@@ -108,12 +174,12 @@ import { Injectable, inject } from '@angular/core';
     getAllAlerts(batchIds: string[]): Observable<Alert[]> {
       if (batchIds.length === 0) return of([]);
       const col = collection(this.firestore, 'alerts');
-      const q = query(col, where('batchId', 'in', batchIds), orderBy('dueDate', 'asc'));
+      const q = query(col, where('batchId', 'in', batchIds), orderBy('createdAt', 'asc'));
       return (collectionData(q, { idField: 'id' }) as Observable<any[]>).pipe(
         map(alerts => alerts.map(a => ({
           ...a,
           dueDate: a.dueDate ? (a.dueDate.toDate?.() ?? a.dueDate) : null,
-          createAt: a.createdAt ? (a.createdAt.toDate?.() ?? a.createdAt) : null
+          createdAt: a.createdAt ? (a.createdAt.toDate?.() ?? a.createdAt) : null
         } as Alert)))
       );
     }
@@ -126,6 +192,29 @@ import { Injectable, inject } from '@angular/core';
     completeAlert(alertId: string, completed: boolean) {
       const ref = doc(this.firestore, 'alerts', alertId);
       return updateDoc(ref, { completed });
+    }
+
+    async getAlertOnce(id: string): Promise<Alert | undefined> {
+      const docRef = doc(this.firestore, 'alerts', id);
+      const snapshot = await getDoc(docRef);
+      if (!snapshot.exists()) return undefined;
+      const data = snapshot.data();
+      return {
+        id: snapshot.id,
+        ...data,
+        dueDate: data['dueDate']?.toDate?.() ?? data['dueDate'],
+        createdAt: data['createdAt']?.toDate?.() ?? data['createdAt'],
+      } as Alert;
+    }
+
+    updateAlert(id: string, alert: Partial<Alert>): Promise<void> {
+      const ref = doc(this.firestore, 'alerts', id);
+      return updateDoc(ref, { ...alert });
+    }
+
+    deleteAlert(id: string): Promise<void> {
+      const ref = doc(this.firestore, 'alerts', id);
+      return deleteDoc(ref);
     }
 
     // ---- ABV Calculation ----

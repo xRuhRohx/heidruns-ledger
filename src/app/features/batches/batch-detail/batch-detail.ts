@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-  import { ActivatedRoute, RouterLink } from '@angular/router';
+  import { ActivatedRoute, Router, RouterLink } from '@angular/router';
   import { FormsModule } from '@angular/forms';
   import { BatchService } from '../../../core/services/batch';
   import { Alert, Batch, BatchNote, Feeding, GravityReading, Ingredient } from '../../../core/models/models';
@@ -15,6 +15,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
   })
   export class BatchDetail implements OnInit {
     private route = inject(ActivatedRoute);
+    private router = inject(Router);
     private batchService = inject(BatchService);
 
     batch = signal<Batch | null>(null);
@@ -95,6 +96,12 @@ import { Component, inject, signal, OnInit } from '@angular/core';
       this.batchService.getAlerts(id).subscribe(a => this.alerts.set(a));
     }
 
+    deleteBatch() {
+      if (!confirm(`Are you sure you want to delete "${this.batch()?.name}"? This cannot be undone.`)) return;
+      this.batchService.deleteBatchWithData(this.batchId())
+        .then(() => this.router.navigate(['/batches']));
+    }
+
     toggleAlert(alert: Alert) {
       if (!alert.id) return;
       this.batchService.completeAlert(alert.id, !alert.completed);
@@ -129,5 +136,36 @@ import { Component, inject, signal, OnInit } from '@angular/core';
         console.error('Error saving note:', error);
         this.savingNote.set(false);
       });
+    }
+
+    deleteFeeding(feeding: Feeding) {
+      if (!confirm(`Delete Feeding #${feeding.feedingNumber}? This cannot be undone.`)) return;
+      this.batchService.deleteFeeding(feeding.id!)
+        .then(() => this.batchService.recalculateAndSaveAbv(
+          this.batchId(), this.batch()!.originalGravity, this.batch()!.currentGravity
+        ));
+    }
+
+    deleteGravityReading(reading: GravityReading) {
+      if (!confirm('Delete this gravity reading? This cannot be undone.')) return;
+      this.batchService.deleteGravityReading(reading.id!)
+        .then(() => this.batchService.recalculateAndSaveAbv(
+          this.batchId(), this.batch()!.originalGravity, this.batch()!.currentGravity
+        ));
+    }
+
+    deleteIngredient(ingredient: Ingredient) {
+      if (!confirm(`Delete "${ingredient.name}"? This cannot be undone.`)) return;
+      this.batchService.deleteIngredient(ingredient.id!);
+    }
+
+    deleteNote(note: BatchNote) {
+      if (!confirm('Delete this note? This cannot be undone.')) return;
+      this.batchService.deleteNote(note.id!);
+    }
+
+    deleteAlert(alert: Alert) {
+      if (!confirm(`Delete alert "${alert.title}"? This cannot be undone.`)) return;
+      this.batchService.deleteAlert(alert.id!);
     }
   }

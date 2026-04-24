@@ -1,77 +1,77 @@
 <div class="batch-form">
-    <div class="header">
-        <h1>New Batch</h1>
-        <a routerLink="/batches">Back</a>
-    </div>
+      <div class="header">
+          <h1>{{ isEditing() ? 'Edit Batch' : 'New Batch' }}</h1>
+          <a routerLink="/batches">Back</a>
+      </div>
 
-    <form (ngSubmit)="save()">
-        <div class="field">
-            <label>Photo</label>
-            <div class="image-picker" (click)="imageInput.click()">
-                @if (imagePreview()) {
-                    <img [src]="imagePreview()!" alt="Batch Preview" />
-                } @else {
-                    <span>Click to add a photo</span>
-                }
-            </div>
-            <input #imageInput type="file" accept="image/*"
-                (change)="onImageSelected($event)" style="display:none" />
-        </div>
-        <div class="field">
-            <label>Batch Name</label>
-            <input type="text" [(ngModel)]="batch.name" name="name" required />
-        </div>
+      <form (ngSubmit)="save()">
+          <div class="field">
+              <label>Photo</label>
+              <div class="image-picker" (click)="imageInput.click()">
+                  @if (imagePreview()) {
+                      <img [src]="imagePreview()!" alt="Batch Preview" />
+                  } @else {
+                      <span>Click to add a photo</span>
+                  }
+              </div>
+              <input #imageInput type="file" accept="image/*"
+                  (change)="onImageSelected($event)" style="display:none" />
+          </div>
+          <div class="field">
+              <label>Batch Name</label>
+              <input type="text" [(ngModel)]="batch.name" name="name" required />
+          </div>
 
-        <div class="field">
-            <label>Start Date</label>
-            <input type="date" [(ngModel)]="batch.startDate" name="startDate" required />
-        </div>
+          <div class="field">
+              <label>Start Date</label>
+              <input type="date" [(ngModel)]="batch.startDate" name="startDate" required />
+          </div>
 
-        <div class="field">
-            <label>Status</label>
-            <select [(ngModel)]="batch.status" name="status">
-                <option value="primary">Primary</option>
-                <option value="secondary">Secondary</option>
-                <option value="tertiary">Tertiary</option>
-                <option value="conditioning">Conditioning</option>
-                <option value="aging">aging</option>
-                <option value="complete">Complete</option>
-            </select>
-        </div>
+          <div class="field">
+              <label>Status</label>
+              <select [(ngModel)]="batch.status" name="status">
+                  <option value="primary">Primary</option>
+                  <option value="secondary">Secondary</option>
+                  <option value="tertiary">Tertiary</option>
+                  <option value="conditioning">Conditioning</option>
+                  <option value="aging">Aging</option>
+                  <option value="complete">Complete</option>
+              </select>
+          </div>
 
-        <div class="field">
-            <label>Original Gravity</label>
-            <input type="number" [(ngModel)]="batch.originalGravity" name="originalGravity" step="0.0001" required />
-        </div>
+          <div class="field">
+              <label>Original Gravity</label>
+              <input type="number" [(ngModel)]="batch.originalGravity" name="originalGravity" step="0.0001" required />
+          </div>
 
-        <div class="field">
-            <label>Target ABV (%)</label>
-            <input type="number" [(ngModel)]="batch.targetAbv" name="targetABV" step="0.1" required />
-        </div>
+          <div class="field">
+              <label>Target ABV (%)</label>
+              <input type="number" [(ngModel)]="batch.targetAbv" name="targetABV" step="0.1" required />
+          </div>
 
-        <div class="field">
-            <label>Tilt Hydrometer Color <span class="optional">(optional)</span></label>
-            <select [(ngModel)]="batch.tiltColor" name="tiltColor">
-                <option [ngValue]="undefined">None — manual entry only</option>
-                <option value="Red">Red</option>
-                <option value="Green">Green</option>
-                <option value="Black">Black</option>
-                <option value="Purple">Purple</option>
-                <option value="Orange">Orange</option>
-                <option value="Blue">Blue</option>
-                <option value="Yellow">Yellow</option>
-                <option value="Pink">Pink</option>
-            </select>
-        </div>
+          <div class="field">
+              <label>Tilt Hydrometer Color <span class="optional">(optional)</span></label>
+              <select [(ngModel)]="batch.tiltColor" name="tiltColor">
+                  <option [ngValue]="undefined">None — manual entry only</option>
+                  <option value="Red">Red</option>
+                  <option value="Green">Green</option>
+                  <option value="Black">Black</option>
+                  <option value="Purple">Purple</option>
+                  <option value="Orange">Orange</option>
+                  <option value="Blue">Blue</option>
+                  <option value="Yellow">Yellow</option>
+                  <option value="Pink">Pink</option>
+              </select>
+          </div>
 
-        <div class="field">
-            <label>Tilt Hourly Threshold <span class="optional">(optional — gravity at which to switch to hourly
-        logging)</span></label>
-            <input type="number" [(ngModel)]="batch.tiltHourlyThreshold" name="tiltHourlyThreshold" step="0.001" />
-        </div>
+          <div class="field">
+              <label>Tilt Hourly Threshold <span class="optional">(optional — gravity at which to switch to hourly
+  logging)</span></label>
+              <input type="number" [(ngModel)]="batch.tiltHourlyThreshold" name="tiltHourlyThreshold" step="0.001" />
+          </div>
 
-        <button type="submit" [disabled]="saving()">
-            {{ saving() ? 'Saving...' : 'Save Batch' }}
-        </button>
-    </form>
-</div>
+          <button type="submit" [disabled]="saving()">
+              {{ saving() ? 'Saving...' : (isEditing() ? 'Update Batch' : 'Save Batch') }}
+          </button>
+      </form>
+  </div>

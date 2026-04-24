@@ -50,14 +50,14 @@ export class Dashboard implements OnInit {
     const now = new Date();
     const week = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
     return this.alerts().filter(a =>
-      !a.completed && a.dueDate >= now && a.dueDate <= week
+      !a.completed && a.dueDate != null && a.dueDate >= now && a.dueDate <= week
     ).length;
   });
 
   overdueAlerts = computed(() => {
     const now = new Date();
     return this.alerts().filter(a =>
-      !a.completed && a.dueDate < now
+      !a.completed && a.dueDate != null && a.dueDate < now
     ).length;
   });
 

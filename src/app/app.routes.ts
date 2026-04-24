@@ -3,34 +3,57 @@ import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    { path: 'login',
+    { 
+        path: 'login',
         loadComponent: () => import('./features/login/login')
             .then(m => m.Login)
     },
-    { path: 'dashboard', 
+    { 
+        path: 'dashboard', 
         loadComponent: () => import('./features/dashboard/dashboard')
             .then(m => m.Dashboard), 
         canActivate: [authGuard] 
     },
-    { path: 'batches', 
+    { 
+        path: 'batches', 
         loadComponent: () => import('./features/batches/batch-list/batch-list')
             .then(m => m.BatchList), 
         canActivate: [authGuard] 
     },
-    { path: 'batches/new', 
+    { 
+        path: 'batches/new', 
         loadComponent: () => import('./features/batches/batch-form/batch-form')
             .then(m => m.BatchForm), 
         canActivate: [authGuard] 
     },
-    { path: 'batches/:id', 
+    {
+        path: 'batches/:id/edit',
+        loadComponent: () => import('./features/batches/batch-form/batch-form')
+            .then(m => m.BatchForm),
+        canActivate: [authGuard]
+    },
+    { 
+        path: 'batches/:id', 
         loadComponent: () => import('./features/batches/batch-detail/batch-detail')
             .then(m => m.BatchDetail), 
         canActivate: [authGuard] 
     },
     {
+        path: 'batches/:id/feeding/:feedingId/edit',
+        loadComponent: () => import('./features/batches/feeding-form/feeding-form')
+            .then(m => m.FeedingForm),
+        canActivate: [authGuard]
+    },
+    {
         path: 'batches/:id/feeding/new',
         loadComponent: () => import('./features/batches/feeding-form/feeding-form')
             .then(m => m.FeedingForm),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'batches/:id/gravity/:readingId/edit',
+        loadComponent: () => import('./features/batches/gravity-form/gravity-form')
+        .then(m => m.GravityForm),
         canActivate: [authGuard]
     },
     {
@@ -40,9 +63,21 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'batches/:id/ingredient/:ingredientId/edit',
+        loadComponent: () => import('./features/batches/ingredient-form/ingredient-form')
+        .then(m => m.IngredientForm),
+        canActivate: [authGuard]
+    },
+    {
         path: 'batches/:id/ingredient/new',
         loadComponent: () => import('./features/batches/ingredient-form/ingredient-form')
             .then(m => m.IngredientForm),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'batches/:id/alert/:alertId/edit',
+        loadComponent: () => import('./features/alerts/alert-form/alert-form')
+        .then(m => m.AlertFormComponent),
         canActivate: [authGuard]
     },
     { 
@@ -51,7 +86,8 @@ export const routes: Routes = [
             .then(m => m.AlertFormComponent), 
             canActivate: [authGuard] 
     },
-    { path: 'alerts', 
+    { 
+        path: 'alerts', 
         loadComponent: () => import('./features/alerts/alert-list/alert-list')
             .then(m => m.AlertList), 
         canActivate: [authGuard] 

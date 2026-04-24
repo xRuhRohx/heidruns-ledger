@@ -58,7 +58,9 @@ export interface Alert {
     id?: string;
     batchId: string;
     title: string;
-    dueDate: Date;
+    dueDate?: Date;
+    gravityThreshold?: number;
     completed: boolean;
+    notified: boolean;
     createdAt: Date;
 }
