@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { BatchService } from '../../../core/services/batch';
 import { Batch } from '../../../core/models/models';
 import { Location } from '@angular/common';
-import { doc } from 'firebase/firestore';
 
 @Component({
   selector: 'app-batch-form',

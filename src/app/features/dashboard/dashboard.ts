@@ -4,6 +4,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { BatchService } from '../../core/services/batch';
 import { Batch, Alert, GravityReading } from '../../core/models/models';
+import { parseDate } from '../../core/utils/date';
 
 const BATCH_COLORS = [
   '#C8860A', '#EAB04A', '#6B4420', '#3D6B30',
@@ -72,23 +73,15 @@ export class Dashboard implements OnInit {
     const datasets = filtered.map((batch, i) => {
       const readings = this.allReadings()
         .filter(r => r.batchId === batch.id)
-        .sort((a, b) => {
-          const da = (a.date as any)?.toDate?.() ?? new Date(a.date);
-          const db = (b.date as any)?.toDate?.() ?? new Date(b.date);
-          return da - db;
-        });
+        .sort((a, b) => parseDate(a.date).getTime() - parseDate(b.date).getTime());
 
-      const startDate = (batch.startDate as any)?.toDate?.() ?? new Date(batch.startDate);
       const color = BATCH_COLORS[i % BATCH_COLORS.length];
 
       return {
         label: batch.name,
         data: [
-          { x: new Date(startDate).getTime(), y: batch.originalGravity },
-          ...readings.map(r => {
-            const d = (r.date as any)?.toDate?.() ?? new Date(r.date);
-            return { x: new Date(d).getTime(), y: r.reading };
-          })
+          { x: parseDate(batch.startDate).getTime(), y: batch.originalGravity },
+          ...readings.map(r => ({ x: parseDate(r.date).getTime(), y: r.reading }))
         ],
         borderColor: color,
         backgroundColor: color + '20',

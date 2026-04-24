@@ -3,6 +3,7 @@ import { Component, inject, signal } from '@angular/core';
   import { FormsModule } from '@angular/forms';
   import { BatchService } from '../../../core/services/batch';
   import { Alert } from '../../../core/models/models';
+  import { parseDate } from '../../../core/utils/date';
 
   @Component({
     selector: 'app-alert-form',
@@ -41,7 +42,7 @@ import { Component, inject, signal } from '@angular/core';
       this.batchService.addAlert({
         batchId: this.batchId(),
         title: this.alert.title,
-        dueDate: new Date(this.dueDateString),
+        dueDate: parseDate(this.dueDateString),
         completed: false,
         createdAt: new Date()
       }).then(() => {
